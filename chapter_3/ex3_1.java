@@ -1,3 +1,6 @@
+import java.util.EmptyStackException;
+import java.lang.IndexOutOfBoundsException;
+
 public class ex3_1 {
     int[] arr;
     int[] tops;
@@ -11,18 +14,25 @@ public class ex3_1 {
     }
 
     public void push(int arrayNum, int value) throws IndexOutOfBoundsException {
-        if (top[i] == (i + 1) * (arr.length / 3))
+        if (tops[arrayNum - 1] == (arrayNum + 1) * (arr.length / 3))
             throw new IndexOutOfBoundsException();
-        arr[tops[i]] = value;
-        tops[i]++;
+        arr[tops[arrayNum - 1]] = value;
+        tops[arrayNum - 1]++;
     }
 
-    public int pop(int arrayNum) throws EmptyStackException {
-        tops[i]--;
-        if (top[i] < i * (arr.length / 3))
+    public int pop(int i) throws EmptyStackException {
+        tops[i - 1]--;
+        if (tops[i - 1] < (i - 1) * (arr.length / 3))
             throw new EmptyStackException();
-        return arr[tops[i]];
+        return arr[tops[i - 1]];
     }
+
+    public int peek(int i) { 
+        if (tops[i - 1] < (i - 1) * (arr.length / 3))
+            throw new EmptyStackException();
+        return arr[tops[i - 1] - 1];
+    }
+		
 
 
     public static void main(String[] args) throws Exception {
@@ -32,6 +42,7 @@ public class ex3_1 {
         e.push(2, 0);
         System.out.println("Should be 0: " + e.pop(2)); 
         e.push(3, 0);
+        System.out.println("Should be 0: " + e.peek(3)); 
         System.out.println("Should be 0: " + e.pop(3)); 
         for (int i = 0; i < 10; i++) {
             e.push(1, i);
