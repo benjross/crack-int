@@ -1,14 +1,14 @@
-public class Tree<C> {
-    private class Node<C> {
-        Node<C> left, right;
-        C data;
-        Node(C data) {
+public class Tree<T extends Comparable<T>> {
+    private class Node<T extends Comparable<T>> {
+        Node<T> left, right;
+        T data;
+        Node(T data) {
             this.data = data;
             left = right = null;
         }
     }
 
-    Node<C> root;
+    Node<T> root;
 
     public Tree() {
         root = null;
@@ -18,42 +18,34 @@ public class Tree<C> {
         return root == null;
     }
 
-    public void insert(C item) {
-        if (isEmpty()) {
-            root = new Node<C>(item);
-        }
-        else {
-            root = insert(item, root);
-        }
+    public void insert(T item) {
+        root = insert(item, root);
     }
 
-    private Node<C> insert(C item, Node<C> node) {
+    private Node<T> insert(T item, Node<T> node) {
         if (node == null) {
-            return new Node<C>(item);
+            return new Node<T>(item);
         }
-        int res = node.data.compare(item);
-        if (res < 0) {
+        int res = item.compareTo(node.data);
+        if (res == 0 )
+            return node;
+        else if (res < 0) {
             node.left = insert(item, node.left);
-        } else if (res > 0) {
+        } else {
             node.right = insert(item, node.right);
         }
         return node;
     }
 
-    public boolean contains(C item) {
-        if (isEmpty()) {
-            return false;
-        }
-        else {
-            contains(item, root);
-        }
+    public boolean contains(T item) {
+        return contains(item, root);
     }
 
-    private boolean contains(C item, Node<C> node) {
+    private boolean contains(T item, Node<T> node) {
         if (node == null) {
             return false;
         }
-        int res = node.data.compare(item);
+        int res = node.data.compareTo(item);
         if (res == 0) {
             return true;
         } else if (res < 0) {
@@ -62,4 +54,43 @@ public class Tree<C> {
             return contains(item, node.right);
         }
     }
+    public void print() {
+        print(root, 0);
+    }
+
+    private void print(Node node, int level) {
+        for (int i = 0; i < level; i++){
+            System.out.print("\t");
+        }
+        if (node == null)
+            System.out.println("-");
+        else {
+            System.out.println(node.data);
+            if (node.left != null || node.right != null) {
+                print(node.left, level + 1);
+                print(node.right, level + 1);
+            }
+        }
+    }
+
+    public boolean isBalanced() {
+        return isBalanced(root) >= 0;
+    }
+
+    private int isBalanced(Node node) {
+        if (node == null)
+            return 0;
+        int result = isBalanced(node.left);
+        if (result < 0)
+            return -1;
+        int leftHeight = 1 + isBalanced(node.left);
+        result = isBalanced(node.right);
+        if (result < 0)
+            return -1;
+        int rightHeight = 1 + isBalanced(node.right);
+        if (Math.abs(leftHeight - rightHeight) > 1)
+            return -1;
+        return Math.max(leftHeight, rightHeight);
+    }
+
 }
