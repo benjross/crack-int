@@ -40,5 +40,8 @@ public class ex2_4 {
         head1.print();
         head3.print();
         add(head1, head3).print();
+        add(null, null);
+        head3.print();
+        add(null, head3).print();
     }
 }

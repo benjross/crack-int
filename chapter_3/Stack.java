@@ -1,27 +1,44 @@
-public class Stack {
-	int[] arr;
+import java.util.EmptyStackException;
+import java.util.ArrayList;
+
+public class Stack<T> {
+    ArrayList<T> arr;
 	int top;
 
 	public Stack() {
-		arr = new int[16];
+		arr = new ArrayList<T>();
 		top = -1;
 	}
 	
-	public Integer pop() {
+	public T pop() {
 		if (top < 0)
-			return null;
-		return arr[top--];
+			throw new EmptyStackException();
+		return arr.get(top--);
 	}
 
-	public void push(int num) {
-		top++;
-		if (top == arr.length) {
-			int[] temp = new int[arr.length * 2];
-			for (int i = 0; i < arr.length; i++) {
-				temp[i] = arr[i];
-			}
-			arr = temp;
-		} 
-		arr[top] = num;
+	public void push(T num) {
+		arr.add(++top, num);
 	}		
+
+    public T peek() {
+		if (top < 0)
+			throw new EmptyStackException();
+        return arr.get(top);
+    }
+
+    public int size() {
+        return top + 1;
+    }
+
+    public boolean isEmpty() {
+        return top == -1;
+    }
+
+    public String toString() {
+        String s = "bottom";
+        for (T t: arr) {
+            s += " " + t.toString();
+        }
+        s += " top";
+    }
 }
